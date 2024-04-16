@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
   runApp(MyApp());
@@ -8,25 +9,38 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'VeL',
+      title: 'My App',
       theme: ThemeData(
         primarySwatch: Colors.indigo, 
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(),
+      home: SplashPage(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class SplashPage extends StatefulWidget {
+  @override
+  _SplashPageState createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('VeL'),
-      ),
       body: Container(
-        color: Colors.indigo, 
+        color: Color.fromARGB(255, 205, 212, 255), 
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -39,33 +53,6 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 50), 
-              SizedBox(
-                width: 200, 
-                height: 30, 
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
-                  },
-                  child: Text('Login'),
-                ),
-              ),
-              SizedBox(height: 10),
-              SizedBox(
-                width: 200, 
-                height: 30, 
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()),
-                    );
-                  },
-                  child: Text('Register'),
-                ),
-              ),
             ],
           ),
         ),
@@ -78,9 +65,6 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Register'),
-      ),
       body: Container(
         color: Colors.indigo, 
         child: Center(
@@ -138,6 +122,10 @@ class RegisterPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     // Proses registrasi
+                     Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
                   },
                   child: Text('Register'),
                 ),
@@ -178,9 +166,6 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
     body: Container(
         color: Colors.indigo, 
         child: Center(
@@ -234,6 +219,10 @@ class LoginPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     // Proses login
+                     Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
                   },
                   child: Text('Login'),
                 ),
@@ -264,6 +253,97 @@ class LoginPage extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  final List<String> userNames = [
+    'Indahtr', 'Owen', 'Marsyani', 'Mirahkrtk_', 'Srikheart', 'Nadia', 'Wedanggaa','Pradiva_24', 'Orchid.tata'
+  ];
+
+  String getRandomUserName() {
+    final Random random = Random();
+    return userNames[random.nextInt(userNames.length)];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text('Other Users'),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onChanged: (value) {
+               
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 50,
+              itemBuilder: (context, index) {
+                final String userName = getRandomUserName();
+                final bool isOnline = Random().nextBool();
+                final Color statusColor = isOnline ? Colors.green : Colors.red;
+                final String statusText = isOnline ? 'Online' : 'Offline';
+
+                return ListTile(
+                  leading: Icon(Icons.person, color: statusColor),
+                  title: Text(userName),
+                  trailing: Text(
+                    statusText,
+                    style: TextStyle(
+                      color: statusColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'User',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: 0,
+        onTap: (index) {
+        },
       ),
     );
   }
